@@ -7,55 +7,46 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
 
 @RestController
 public class FilmController {
 
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
-    //private final HashSet<Film> filmList = new HashSet<>();
     private final HashMap<Integer, Film> filmList = new HashMap<>();
     private int uniqueNumber = 1;
 
     //добавить фильм
     @PostMapping("/films")
-    public Film addFilm(@RequestBody Film film) throws ValidationException {
+    public Film addFilm(@Valid @RequestBody Film film) throws ValidationException {
+        log.info("Получен запрос добавления фильма");
         checkFilmBody(film);
         film.setId(uniqueNumber);
         filmList.put(uniqueNumber, film);
         uniqueNumber++;
-        log.info("Получен запрос добавления фильма");
         return film;
     }
 
     @PutMapping("/films")
-    public Film updateFilm(@RequestBody Film film) throws ValidationException {
+    public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
+        log.info("Получен запрос обновления фильма");
         checkFilmBody(film);
-        boolean isOK = false;
-        for (int id : filmList.keySet()) {
-            if (id == film.getId()) {
-                isOK = true;
-                break;
-            }
-        }
-        if (!isOK) {
+        if (!filmList.containsKey(film.getId())) {
             throw new ValidationException("Попытка обновления несуществующего фильма!");
         }
         filmList.put(film.getId(), film);
-        log.info("Получен запрос обновления фильма");
         return film;
     }
 
     @GetMapping("/films")
     public ArrayList<Film> getFilmList() {
-        ArrayList<Film> films = new ArrayList<>();
         log.info("Получен запрос получения списка фильмов");
-        for (Film film : filmList.values()) {
-            films.add(film);
-        }
+        ArrayList<Film> films = new ArrayList<>(filmList.values());
         return films;
     }
 
@@ -66,14 +57,20 @@ public class FilmController {
             throw new ValidationException("Пустое название!");
         }
         //максимальная длина описания — 200 символов;
-        if (film.getDescription().length() > 200) {
-            log.error("Превышена максимальная длина описания!");
-            throw new ValidationException("Превышена максимальная длина описания!");
+        Optional<String> descriptionOptional = Optional.of(film.getDescription());
+        if (descriptionOptional.isPresent()) {
+            if (film.getDescription().length() > 200) {
+                log.error("Превышена максимальная длина описания!");
+                throw new ValidationException("Превышена максимальная длина описания!");
+            }
         }
         //дата релиза — не раньше 28 декабря 1895 года;
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            log.error("Дата релиза раньше 28 декабря 1895 года!");
-            throw new ValidationException("Дата релиза раньше 28 декабря 1895 года!");
+        Optional<LocalDate> releaseDateOptional = Optional.of(film.getReleaseDate());
+        if (releaseDateOptional.isPresent()) {
+            if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+                log.error("Дата релиза раньше 28 декабря 1895 года!");
+                throw new ValidationException("Дата релиза раньше 28 декабря 1895 года!");
+            }
         }
         //продолжительность фильма должна быть положительной.
         if (film.getDuration() <= 0) {
