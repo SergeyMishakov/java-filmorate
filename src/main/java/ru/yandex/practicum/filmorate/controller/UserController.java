@@ -50,19 +50,10 @@ public class UserController {
     }
 
     protected User checkUserBody(User user) throws ValidationException {
-        //электронная почта не может быть пустой и должна содержать символ @;
-        if  (user.getEmail() == null) {
-            log.error("Электронная почта пустая или не содержит символ @!");
-            throw new ValidationException("Электронная почта пустая или не содержит символ @!");
-        }
-        if (!user.getEmail().contains("@")) {
-            log.error("Электронная почта пустая или не содержит символ @!");
-            throw new ValidationException("Электронная почта пустая или не содержит символ @!");
-        }
-        //логин не может быть пустым и содержать пробелы;
-        if ((user.getLogin() == null) || (user.getLogin().contains(" "))) {
-            log.error("Логин пустой или содержит пробелы");
-            throw new ValidationException("Логин пустой или содержит пробелы");
+        //логин не может содержать пробелы;
+        if (user.getLogin().contains(" ")) {
+            log.error("Логин содержит пробелы");
+            throw new ValidationException("Логин содержит пробелы");
         }
         //имя для отображения может быть пустым — в таком случае будет использован логин;
         if (user.getName() == null) {
@@ -70,14 +61,10 @@ public class UserController {
             user.setName(user.getLogin());
         }
         //дата рождения не может быть в будущем.
-        Optional<LocalDate> birthdayOptional = Optional.of(user.getBirthday());
-        if (birthdayOptional.isPresent()) {
-            if (user.getBirthday().isAfter(LocalDate.now())) {
-                log.error("Дата рождения в будущем!");
-                throw new ValidationException("Дата рождения в будущем!");
-            }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            log.error("Дата рождения в будущем!");
+            throw new ValidationException("Дата рождения в будущем!");
         }
-
         return user;
     }
 }

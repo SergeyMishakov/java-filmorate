@@ -27,66 +27,11 @@ class UserControllerTest {
         assertEquals(resultUser, user);
     }
 
-    //электронная почта не может быть пустой
-    @Test
-    void checkUserWithNullEmail() throws ValidationException {
-        User user = User.builder()
-                .login("Truboprokatchic")
-                .name("Afanasiy Arkadievich")
-                .birthday(LocalDate.of(1992, 4, 21))
-                .build();
-        final ValidationException exception = assertThrows(
-                ValidationException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws ValidationException {
-                        User resultUser = userController.checkUserBody(user);
-                    }
-                });
-    }
-
-    //электронная почта должна содержать символ @;
-    @Test
-    void checkUserWithEmailWithoutDog() throws ValidationException {
-        User user = User.builder()
-                .login("Truboprokatchic")
-                .name("Afanasiy Arkadievich")
-                .email("truboprokatchikyandex.ru")
-                .birthday(LocalDate.of(1992, 4, 21))
-                .build();
-        final ValidationException exception = assertThrows(
-                ValidationException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws ValidationException {
-                        User resultUser = userController.checkUserBody(user);
-                    }
-                });
-    }
-
     //логин не может содержать пробелы;
     @Test
     void checkUserWith_InLogin() throws ValidationException {
         User user = User.builder()
                 .login("Trubopr okatchic")
-                .name("Afanasiy Arkadievich")
-                .email("truboprokatchik@yandex.ru")
-                .birthday(LocalDate.of(1992, 4, 21))
-                .build();
-        final ValidationException exception = assertThrows(
-                ValidationException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws ValidationException {
-                        User resultUser = userController.checkUserBody(user);
-                    }
-                });
-    }
-
-    //логин не может быть пустым
-    @Test
-    void checkUserWithoutLogin() throws ValidationException {
-        User user = User.builder()
                 .name("Afanasiy Arkadievich")
                 .email("truboprokatchik@yandex.ru")
                 .birthday(LocalDate.of(1992, 4, 21))
@@ -149,19 +94,5 @@ class UserControllerTest {
                 .build();
         User resultUser = userController.checkUserBody(user);
         assertEquals(resultUser, user);
-    }
-
-    //пустой юзер
-    @Test
-    void checkEmptyUser() throws ValidationException {
-        User user = User.builder().build();
-        final ValidationException exception = assertThrows(
-                ValidationException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws ValidationException {
-                        User resultUser = userController.checkUserBody(user);
-                    }
-                });
     }
 }

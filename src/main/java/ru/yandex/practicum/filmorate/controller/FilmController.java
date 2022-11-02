@@ -51,27 +51,11 @@ public class FilmController {
     }
 
     protected boolean checkFilmBody(Film film) throws ValidationException {
-        //название не может быть пустым;
-        if ((film.getName() == null) || film.getName() == "") {
-            log.error("Пустое название!");
-            throw new ValidationException("Пустое название!");
-        }
-        //максимальная длина описания — 200 символов;
-        Optional<String> descriptionOptional = Optional.of(film.getDescription());
-        if (descriptionOptional.isPresent()) {
-            if (film.getDescription().length() > 200) {
-                log.error("Превышена максимальная длина описания!");
-                throw new ValidationException("Превышена максимальная длина описания!");
-            }
-        }
         //дата релиза — не раньше 28 декабря 1895 года;
-        Optional<LocalDate> releaseDateOptional = Optional.of(film.getReleaseDate());
-        if (releaseDateOptional.isPresent()) {
-            if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-                log.error("Дата релиза раньше 28 декабря 1895 года!");
-                throw new ValidationException("Дата релиза раньше 28 декабря 1895 года!");
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            log.error("Дата релиза раньше 28 декабря 1895 года!");
+            throw new ValidationException("Дата релиза раньше 28 декабря 1895 года!");
             }
-        }
         //продолжительность фильма должна быть положительной.
         if (film.getDuration() <= 0) {
             log.error("Продолжительность фильма отрицательная!");

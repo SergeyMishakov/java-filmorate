@@ -14,10 +14,9 @@ import java.time.LocalDate;
 public class User {
 
     private int id;
-    @NotNull(message = "Некорректный формат электронной почты")
+    @NotBlank
     @Email
     private String email;
-    @NotNull
     @NotBlank
     private String login;
     private String name;
