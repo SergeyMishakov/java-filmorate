@@ -84,22 +84,6 @@ public class FilmController {
         }
         return true;
     }
-
-    //исключения
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleValidation(final ValidationException e) {
-        return Map.of(
-                "error", "Ошибка валидации",
-                "errorMessage", e.getMessage()
-        );
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleAbsence(final AbsenceException e) {
-        return Map.of("error", "Данные не найдены!");
-    }
 }
 
 

@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.AbsenceException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -51,7 +52,16 @@ public class FilmService {
     //удалить лайк
     public void deleteLike(int filmId, long userId) {
         Film film = getFilmById(filmId);
-        film.deleteLike(userId);
+        Set<Long> likeList = film.getLikeList();
+        if (likeList.contains(userId)) {
+            film.deleteLike(userId);
+        } else {
+            try {
+                throw new AbsenceException("Данный пользователь не ставил лайк этому фильму");
+            } catch (AbsenceException e) {
+                throw new RuntimeException(e);
+            }
+        }
         updateFilm(film);
     }
 

@@ -31,15 +31,5 @@ public class Film {
         likeList.add(userId);
     }
 
-    public void deleteLike(Long userId) {
-        if (likeList.contains(userId)) {
-            likeList.remove(userId);
-        } else {
-            try {
-                throw new AbsenceException("Данный пользователь не ставил лайк этому фильму");
-            } catch (AbsenceException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+    public void deleteLike(Long userId) {likeList.remove(userId); }
 }

@@ -79,14 +79,11 @@ public class UserService {
         Set<Integer> firstFriendList = firstUser.getFriendList();
         User secondUser = userStorage.getUserById(secondId);
         Set<Integer> secondFriendList = secondUser.getFriendList();
-        if (firstFriendList != null) {
-            for (Integer id : firstFriendList) {
-                if (secondFriendList.contains(id)) {
-                    commonFriendList.add(userStorage.getUserById(id));
-                }
-            }
+        Set<Integer> resultFriendList = new HashSet<>(firstFriendList);
+        resultFriendList.retainAll(secondFriendList);
+        for (Integer id : resultFriendList) {
+            commonFriendList.add(userStorage.getUserById(id));
         }
-
         return commonFriendList;
     }
 }
