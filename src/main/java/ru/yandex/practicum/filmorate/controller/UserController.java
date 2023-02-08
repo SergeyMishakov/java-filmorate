@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public User updateUser(@Valid @RequestBody User user) throws ValidationException {
+    public User updateUser(@Valid @RequestBody User user) throws ValidationException, AbsenceException {
         log.info("Получен запрос обновления данных пользователя");
         User checkedUser = checkUserBody(user);
         return userService.updateUser(checkedUser);

@@ -1,7 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.ValidationException;
 import javax.validation.constraints.Email;
@@ -14,19 +17,22 @@ import java.util.Set;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     private int id;
     @NotBlank
-    @Email
-    private String email;
-    @NotBlank
     private String login;
     private String name;
+    @NotBlank
+    @Email
+    private String email;
     @NotNull
     @Past
     private LocalDate birthday;
 
+    @JsonIgnore
     private final Set<Integer> friendList = new HashSet<>();
 
     public void addFriend(int userId) {
