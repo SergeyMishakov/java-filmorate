@@ -12,15 +12,15 @@ public interface UserStorage {
 
     User updateUser(User user);
 
-    HashMap<Integer, User> getUserList();
+    HashMap<Long, User> getUserList();
 
-    User getUserById(int id);
+    User getUserById(long id);
 
-    void addFriend(int userId, int friendId);
+    void addFriend(long userId, long friendId);
 
-    void deleteFriend(int userId, int friendId);
+    void deleteFriend(long userId, long friendId);
 
-    ArrayList<User> getFriendList(int id);
+    ArrayList<User> getFriendList(long id);
 
-    ArrayList<User> getCommonFriends(int firstId, int secondId);
+    ArrayList<User> getCommonFriends(long firstId, long secondId);
 }

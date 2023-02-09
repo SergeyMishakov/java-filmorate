@@ -9,13 +9,13 @@ import java.util.*;
 
 public interface FilmStorage {
 
-    HashMap<Integer, Film> getFilmList();
+    HashMap<Long, Film> getFilmList();
 
     Film addFilm(Film film);
 
     Film updateFilm(Film film);
 
-    Film getFilmById(int id);
+    Film getFilmById(long id);
 
     List<Genre> getGenreList();
 
@@ -25,9 +25,9 @@ public interface FilmStorage {
 
     Mpa getMPAById(int id);
 
-    void addLike(int filmId, long userId);
+    void addLike(long filmId, long userId);
 
-    void deleteLike(int filmId, long userId);
+    void deleteLike(long filmId, long userId);
 
-    List<Integer> getLikesByFilm(int filmId);
+    List<Long> getLikesByFilm(long filmId);
 }

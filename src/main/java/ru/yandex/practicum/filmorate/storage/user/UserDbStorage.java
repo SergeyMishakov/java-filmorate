@@ -37,7 +37,6 @@ public class UserDbStorage implements UserStorage{
     }
 
     //создать нового пользователя
-    //insert into users(user_id, login, name, email, birthday) values (?, ?, ?, ?, ?)
     @Override
     public User createUser(User user) {
         String sqlQuery = "insert into users(login, name, email, birthday) " +
@@ -52,12 +51,11 @@ public class UserDbStorage implements UserStorage{
             stmt.setDate(4, Date.valueOf(user.getBirthday()));
             return stmt;
         }, keyHolder);
-        int id = keyHolder.getKey().intValue();
+        long id = keyHolder.getKey().longValue();
         return getUserById(id);
     };
 
     //обновить данные пользователя
-    //update users set login = ?, name = ?, email = ?, birthday = ?" + "where user_id = ?
     @Override
     public User updateUser(User user) {
         String sqlQuery = "update users set " +
@@ -73,25 +71,23 @@ public class UserDbStorage implements UserStorage{
 
     //получить список пользователей
     @Override
-    public HashMap<Integer, User> getUserList() {
+    public HashMap<Long, User> getUserList() {
         String sql = "SELECT * FROM USERS";
-        HashMap<Integer, User> userList = new HashMap<>();
-        List<Object> userArrayList = jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs));
-        for (Object userObject: userArrayList) {
-            User user = (User) userObject;
+        HashMap<Long, User> userList = new HashMap<>();
+        List<User> userArrayList = jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs));
+        for (User user: userArrayList) {
             userList.put(user.getId(), user);
         }
         return userList;
     };
 
     //получить пользователя по id
-    //SELECT * FROM users WHERE film_id = ?
     @Override
-    public User getUserById(int id) {
+    public User getUserById(long id) {
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("SELECT * FROM users WHERE user_id = ?", id);
         if(userRows.next()) {
             User user = new User(
-                    userRows.getInt("user_id"),
+                    userRows.getLong("user_id"),
                     userRows.getString("login"),
                     userRows.getString("name"),
                     userRows.getString("email"),
@@ -106,9 +102,9 @@ public class UserDbStorage implements UserStorage{
     };
 
     //получить объект User
-    static User makeUser(ResultSet rs) throws SQLException {
+    private static User makeUser(ResultSet rs) throws SQLException {
         return new User(
-                rs.getInt("user_id"),
+                rs.getLong("user_id"),
                 rs.getString("login"),
                 rs.getString("name"),
                 rs.getString("email"),
@@ -117,25 +113,23 @@ public class UserDbStorage implements UserStorage{
     }
 
     //добавить в друзья
-    //INSERT INTO friend_list(user_id, friend_id) VALUES (?, ?)
     @Override
-    public void addFriend(int userId, int friendId) {
+    public void addFriend(long userId, long friendId) {
         String sqlQuery = "INSERT INTO friend_list (user_id, friend_id) " +
                 "values (?, ?)";
          jdbcTemplate.update(sqlQuery, userId, friendId);
     }
 
     //удалить из друзей
-    //DELETE FROM friend_list where user_id = ? AND friend_id = ?
     @Override
-    public void deleteFriend(int userId, int friendId) {
+    public void deleteFriend(long userId, long friendId) {
         String sqlQuery = "DELETE FROM friend_list where user_id = ? AND friend_id = ?";
         jdbcTemplate.update(sqlQuery, userId, friendId);
     }
 
-    //SELECT * FROM friend_list AS fl INNER JOIN USERS AS u ON fl.friend_id = u.user_id
+    //вернуть список друзей
     @Override
-    public ArrayList<User> getFriendList(int id) {
+    public ArrayList<User> getFriendList(long id) {
         ArrayList<User> userList = new ArrayList<>();
         String sql = "SELECT fl.friend_id AS user_id, " +
                         "u.email AS email, " +
@@ -144,16 +138,13 @@ public class UserDbStorage implements UserStorage{
                         "u.birthday AS birthday " +
                 "FROM friend_list AS fl JOIN users AS u ON fl.friend_id = u.user_id " +
                 "WHERE fl.user_id = ?";
-        List<Object> userArrayList = jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs), id);
-        for (Object userObject: userArrayList) {
-            User user = (User) userObject;
-            userList.add(user);
-        }
+        List<User> userArrayList = jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs), id);
+        userList.addAll(userArrayList);
         return userList;
     }
 
     //получить список общих друзей
-    public ArrayList<User> getCommonFriends(int firstId, int secondId) {
+    public ArrayList<User> getCommonFriends(long firstId, long secondId) {
         ArrayList<User> commonFriendsList = new ArrayList<>();
         String sql = "SELECT u.user_id user_id, " +
                 "             u.email email, " +
@@ -167,11 +158,8 @@ public class UserDbStorage implements UserStorage{
                 "            WHERE user_id IN (?, ?) " +
                 "            GROUP BY friend_id " +
                 "            HAVING COUNT(user_id) > 1) AS fl INNER JOIN users AS u ON fl.friend_id = u.user_id";
-        List<Object> userArrayList = jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs), firstId, secondId);
-        for (Object userObject: userArrayList) {
-            User user = (User) userObject;
-            commonFriendsList.add(user);
-        }
+        List<User> userArrayList = jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs), firstId, secondId);
+        commonFriendsList.addAll(userArrayList);
         return commonFriendsList;
     }
 }

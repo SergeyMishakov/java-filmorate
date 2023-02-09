@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS films, users, friend_list, like_list, genre, genre_of_film,
 
 
 CREATE TABLE IF NOT EXISTS rating_MPA  (
-                                           MPA_id INT PRIMARY KEY /*AUTO_INCREMENT*/,
+                                           MPA_id INT PRIMARY KEY,
                                            MPA_name varchar(100)  NOT NULL
 );
 
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS films (
     description  varchar(300) NOT NULL,
     release_date date         NOT NULL,
     duration     int          NOT NULL,
-    MPA_id       int          NOT NULL /*REFERENCES rating_MPA (MPA_id)*/
+    MPA_id       int          NOT NULL
 );
 
 
@@ -48,28 +48,6 @@ CREATE TABLE IF NOT EXISTS genre_of_film (
     CONSTRAINT pk_genre_of_film PRIMARY KEY (film_id,genre_id)
 );
 
-
-
-/*ALTER TABLE films ADD CONSTRAINT IF NOT EXISTS fk_Film_MPA_id FOREIGN KEY(MPA_id)
-    REFERENCES rating_MPA (MPA_id);*/
-
-/*ALTER TABLE friend_list ADD CONSTRAINT IF NOT EXISTS fk_friend_list_user_id FOREIGN KEY(user_id)
-    REFERENCES users (user_id);*/
 ALTER TABLE friend_list ADD CONSTRAINT fk_table1_user_id FOREIGN KEY (user_id) REFERENCES users (user_id);
 ALTER TABLE friend_list ADD CONSTRAINT fk_table2_user_id FOREIGN KEY (friend_id) REFERENCES users (user_id);
-/*
-ALTER TABLE friend_list ADD CONSTRAINT IF NOT EXISTS fk_friend_list_friend_id FOREIGN KEY(friend_id)
-    REFERENCES users (user_id);
 
-
-ALTER TABLE like_list ADD CONSTRAINT IF NOT EXISTS fk_like_list_film_id FOREIGN KEY(film_id)
-    REFERENCES films (film_id);
-
-ALTER TABLE like_list ADD CONSTRAINT IF NOT EXISTS fk_like_list_user_id FOREIGN KEY(user_id)
-    REFERENCES users (user_id);
-
-ALTER TABLE genre_of_film ADD CONSTRAINT IF NOT EXISTS fk_genre_of_film_film_id FOREIGN KEY(film_id)
-    REFERENCES films (film_id);
-
-ALTER TABLE genre_of_film ADD CONSTRAINT IF NOT EXISTS fk_genre_of_film_genre_id FOREIGN KEY(genre_id)
-    REFERENCES genre (genre_id);*/

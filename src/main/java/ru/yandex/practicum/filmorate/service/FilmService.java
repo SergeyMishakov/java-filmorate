@@ -51,7 +51,7 @@ public class FilmService {
     }
 
     //вернуть фильм по идентификатору
-    public Film getFilmById(int filmId) {
+    public Film getFilmById(long filmId) {
         Film film = filmStorage.getFilmById(filmId);
         if (film == null) {
             try {
@@ -64,13 +64,13 @@ public class FilmService {
     }
 
     //поставить лайк
-    public void addLike(int filmId, long userId) {
+    public void addLike(long filmId, long userId) {
         filmStorage.addLike(filmId, userId);
     }
 
     //удалить лайк
-    public void deleteLike(int filmId, int userId) {
-        List<Integer> likeList = filmStorage.getLikesByFilm(filmId);
+    public void deleteLike(long filmId, long userId) {
+        List<Long> likeList = filmStorage.getLikesByFilm(filmId);
         if (likeList.contains(userId)) {
             filmStorage.deleteLike(filmId, userId);
         } else {

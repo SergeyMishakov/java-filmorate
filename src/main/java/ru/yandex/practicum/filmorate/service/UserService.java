@@ -46,7 +46,7 @@ public class UserService {
     }
 
     //вернуть пользователя по идентификатору
-    public User getUserById(int id) {
+    public User getUserById(long id) {
         User user = userStorage.getUserById(id);
         if (user == null) {
             try {
@@ -59,7 +59,7 @@ public class UserService {
     }
 
     //добавить в друзья
-    public void addFriend(int userId, int friendId) {
+    public void addFriend(long userId, long friendId) {
         if (userStorage.getUserById(friendId) == null) {
             try {
                 throw new AbsenceException("Такого пользователя не существует");
@@ -71,17 +71,17 @@ public class UserService {
     }
 
     //удалить из друзей
-    public void deleteFriend(int userId, int friendId) {
+    public void deleteFriend(long userId, long friendId) {
         userStorage.deleteFriend(userId, friendId);
     }
 
     //вернуть список друзей пользователя
-    public ArrayList<User> getFriendList(int id) {
+    public ArrayList<User> getFriendList(long id) {
         return userStorage.getFriendList(id);
     }
 
     //вернуть количество общих друзей
-    public ArrayList<User> getCommonFriends(int firstId, int secondId) {
+    public ArrayList<User> getCommonFriends(long firstId, long secondId) {
         return userStorage.getCommonFriends(firstId, secondId);
     }
 }

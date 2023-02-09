@@ -16,20 +16,4 @@ public class Mpa {
 
     private int id;
     private String name;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int mpaId) {
-        this.id = mpaId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String mpaName) {
-        this.name = mpaName;
-    }
 }

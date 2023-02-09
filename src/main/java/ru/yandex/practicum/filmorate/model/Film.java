@@ -16,7 +16,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Film {
-    private int id;
+    private long id;
     @NotBlank
     private String name;
     @Size(min = 1, max = 200)
@@ -30,9 +30,9 @@ public class Film {
     private int rate;
     //@JsonIgnore
     private List<Genre> genres;
-    private final Set<Integer> likeList = new HashSet<>();
+    private final Set<Long> likeList = new HashSet<>();
 
-    public Film(int id, String name, String description, LocalDate releaseDate,
+    public Film(long id, String name, String description, LocalDate releaseDate,
                 int duration, Mpa mpa) {
         this.id = id;
         this.name = name;
@@ -44,7 +44,7 @@ public class Film {
     }
 
     @JsonCreator
-    public Film(int id, String name, String description, LocalDate releaseDate,
+    public Film(long id, String name, String description, LocalDate releaseDate,
                 int duration, int rate, Mpa mpa, List<Genre> genres) {
         this.id = id;
         this.name = name;
@@ -65,11 +65,11 @@ public class Film {
         }
     }
 
-    public void addLike(int userId) {
+    public void addLike(long userId) {
         likeList.add(userId);
     }
 
-    public void deleteLike(int userId) {likeList.remove(userId); }
+    public void deleteLike(long userId) {likeList.remove(userId); }
 
     public List<Genre> getGenres() {
         return genres;

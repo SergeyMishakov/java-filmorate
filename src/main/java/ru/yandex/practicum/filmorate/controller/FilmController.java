@@ -50,13 +50,13 @@ public class FilmController {
     }
 
     @PutMapping("/films/{id}/like/{userId}")
-    public void addLike(@PathVariable int id, @PathVariable int userId) {
+    public void addLike(@PathVariable long id, @PathVariable long userId) {
         log.info("Получен запрос добавления лайка фильму");
         filmService.addLike(id, userId);
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
-    public void deleteLike(@PathVariable int id, @PathVariable int userId) {
+    public void deleteLike(@PathVariable long id, @PathVariable long userId) {
         log.info("Получен запрос удаления лайка у фильма");
         filmService.deleteLike(id, userId);
     }
@@ -68,7 +68,7 @@ public class FilmController {
     }
 
     @GetMapping("/films/{id}")
-    public Film getFilmById(@PathVariable int id) {
+    public Film getFilmById(@PathVariable long id) {
         log.info("Получен запрос получения фильма по id {}", id);
         return filmService.getFilmById(id);
     }
