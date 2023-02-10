@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.AbsenceException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
@@ -48,13 +50,13 @@ public class FilmController {
     }
 
     @PutMapping("/films/{id}/like/{userId}")
-    public void addLike(@PathVariable int id, @PathVariable int userId) {
+    public void addLike(@PathVariable long id, @PathVariable long userId) {
         log.info("Получен запрос добавления лайка фильму");
         filmService.addLike(id, userId);
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
-    public void deleteLike(@PathVariable int id, @PathVariable int userId) {
+    public void deleteLike(@PathVariable long id, @PathVariable long userId) {
         log.info("Получен запрос удаления лайка у фильма");
         filmService.deleteLike(id, userId);
     }
@@ -66,9 +68,33 @@ public class FilmController {
     }
 
     @GetMapping("/films/{id}")
-    public Film getFilmById(@PathVariable int id) {
-        log.info("Получен запрос получения ");
+    public Film getFilmById(@PathVariable long id) {
+        log.info("Получен запрос получения фильма по id {}", id);
         return filmService.getFilmById(id);
+    }
+
+    @GetMapping("/genres")
+    public List<Genre> getGenreList() {
+        log.info("Получен запрос получения списка всех жанров");
+        return filmService.getGenreList();
+    }
+
+    @GetMapping("/genres/{id}")
+    public Genre getGenreById(@PathVariable int id) {
+        log.info("Получен запрос получения жанра по id {}", id);
+        return filmService.getGenreById(id);
+    }
+
+    @GetMapping("/mpa")
+    public List<Mpa> getMPAList() {
+        log.info("Получен запрос получения списка всех рейтингов");
+        return filmService.getMPAList();
+    }
+
+    @GetMapping("/mpa/{id}")
+    public Mpa getMPAById(@PathVariable int id) {
+        log.info("Получен запрос получения рейтинга по id {}", id);
+        return filmService.getMPAById(id);
     }
 
     protected boolean checkFilmBody(Film film) throws ValidationException {

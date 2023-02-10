@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public User updateUser(@Valid @RequestBody User user) throws ValidationException {
+    public User updateUser(@Valid @RequestBody User user) throws ValidationException, AbsenceException {
         log.info("Получен запрос обновления данных пользователя");
         User checkedUser = checkUserBody(user);
         return userService.updateUser(checkedUser);
@@ -49,31 +49,31 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public User getUserById(@PathVariable int id) {
+    public User getUserById(@PathVariable long id) {
         log.info("Получен запрос получения пользователя по идентификатору");
         return userService.getUserById(id);
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable int id, @PathVariable int friendId) {
+    public void addFriend(@PathVariable long id, @PathVariable long friendId) {
         log.info("Получен запрос добавления в друзья");
         userService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable int id, @PathVariable int friendId) {
+    public void deleteFriend(@PathVariable long id, @PathVariable long friendId) {
         log.info("Получен запрос удаления из друзей");
         userService.deleteFriend(id, friendId);
     }
 
     @GetMapping("/users/{id}/friends")
-    public ArrayList<User> getFriendList(@PathVariable int id) {
+    public ArrayList<User> getFriendList(@PathVariable long id) {
         log.info("Получен запрос получения списка друзей пользователя");
         return userService.getFriendList(id);
     }
 
     @GetMapping("/users/{id}/friends/common/{otherId}")
-    public ArrayList<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+    public ArrayList<User> getCommonFriends(@PathVariable long id, @PathVariable long otherId) {
         log.info("Получен запрос получения списка друзей, общих с другими пользователями");
         return userService.getCommonFriends(id, otherId);
     }
